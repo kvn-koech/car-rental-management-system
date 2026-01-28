@@ -46,3 +46,25 @@ def login():
         }), 200
         
     return jsonify({"message": "Invalid email or password"}), 401
+
+@auth_bp.route('/admin-login', methods=['POST'])
+def admin_login():
+    data = request.get_json()
+    secret_key = data.get('secret_key')
+    
+    # In a real production app, this key should be in environment variables
+    ADMIN_SECRET_KEY = "MY_SECRET_ADMIN_KEY" 
+    
+    if secret_key == ADMIN_SECRET_KEY:
+        # Create a token with admin claims
+        access_token = create_access_token(identity="admin", additional_claims={"is_admin": True})
+        return jsonify({
+            "access_token": access_token,
+            "user": {
+                "username": "Admin",
+                "is_admin": True,
+                "role": "admin"
+            }
+        }), 200
+        
+    return jsonify({"message": "Invalid Admin Key"}), 401

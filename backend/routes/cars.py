@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models import db, Car
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt
 
 cars_bp = Blueprint('cars', __name__)
 
@@ -12,8 +12,8 @@ def get_cars():
     if location:
         query = query.filter(Car.location.ilike(f'%{location}%'))
     
-    # Filter by status available?
-    # query = query.filter_by(status='available')
+    # Optional: Filter by status available if not admin? 
+    # For now, let everyone see all cars, but maybe UI filters it.
         
     cars = query.all()
     
@@ -35,7 +35,10 @@ def get_cars():
 @cars_bp.route('/', methods=['POST'])
 @jwt_required()
 def add_car():
-    # In real app, check if user is admin
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify({"message": "Admin access required"}), 403
+
     data = request.get_json()
     new_car = Car(
         make=data['make'],
@@ -43,11 +46,12 @@ def add_car():
         year=data.get('year'),
         price_per_day=data['price_per_day'],
         image_url=data.get('image_url'),
-        location=data['location']
+        location=data['location'],
+        status=data.get('status', 'available')
     )
     db.session.add(new_car)
     db.session.commit()
-    return jsonify({"message": "Car added successfully"}), 201
+    return jsonify({"message": "Car added successfully", "id": new_car.id}), 201
 
 @cars_bp.route('/<int:id>', methods=['GET'])
 def get_car(id):
@@ -62,3 +66,43 @@ def get_car(id):
         "status": car.status,
         "year": car.year
     }), 200
+
+@cars_bp.route('/<int:id>', methods=['PATCH'])
+@jwt_required()
+def update_car(id):
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify({"message": "Admin access required"}), 403
+        
+    car = Car.query.get_or_404(id)
+    data = request.get_json()
+    
+    if 'price_per_day' in data:
+        car.price_per_day = data['price_per_day']
+    if 'status' in data:
+        car.status = data['status']
+    if 'image_url' in data:
+        car.image_url = data['image_url']
+    if 'location' in data:
+        car.location = data['location']
+    if 'make' in data:
+        car.make = data['make']
+    if 'model' in data:
+        car.model = data['model']
+    if 'year' in data:
+        car.year = data['year']
+        
+    db.session.commit()
+    return jsonify({"message": "Car updated successfully"}), 200
+
+@cars_bp.route('/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_car(id):
+    claims = get_jwt()
+    if not claims.get('is_admin'):
+        return jsonify({"message": "Admin access required"}), 403
+        
+    car = Car.query.get_or_404(id)
+    db.session.delete(car)
+    db.session.commit()
+    return jsonify({"message": "Car deleted successfully"}), 200
