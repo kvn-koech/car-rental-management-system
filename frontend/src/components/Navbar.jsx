@@ -40,6 +40,9 @@ const Navbar = ({ theme, toggleTheme }) => {
             </button>
 
             <div className="flex items-center gap-3 ml-2">
+              <Link to="/admin/login" className="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400 font-medium transition text-sm">
+                Admin
+              </Link>
               <Link to="/login" className="px-5 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition">
                 Log In
               </Link>
@@ -91,6 +94,9 @@ const Navbar = ({ theme, toggleTheme }) => {
             <Link to="/about" className="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md">About</Link>
             <Link to="/contact" className="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md">Contact</Link>
             <div className="pt-4 flex flex-col gap-2">
+              <Link to="/admin/login" className="w-full text-center px-4 py-2 text-gray-500 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg">
+                Admin Access
+              </Link>
               <Link to="/login" className="w-full text-center px-4 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg">
                 Log In
               </Link>
