@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+import re
 from models import db, User
 from flask_jwt_extended import create_access_token
 
@@ -12,6 +13,19 @@ def register():
     required_fields = ['username', 'email', 'password', 'phone_number']
     if not all(k in data for k in required_fields):
         return jsonify({"message": "Missing required fields"}), 400
+
+    # Password validation
+    password = data['password']
+    if len(password) < 8:
+        return jsonify({"message": "Password must be at least 8 characters long"}), 400
+    if not re.search(r"[A-Z]", password):
+        return jsonify({"message": "Password must contain at least one uppercase letter"}), 400
+    if not re.search(r"[a-z]", password):
+        return jsonify({"message": "Password must contain at least one lowercase letter"}), 400
+    if not re.search(r"\d", password):
+        return jsonify({"message": "Password must contain at least one digit"}), 400
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        return jsonify({"message": "Password must contain at least one special character"}), 400
 
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"message": "Email already exists"}), 400
