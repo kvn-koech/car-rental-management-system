@@ -5,6 +5,7 @@ const CustomerSignup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phoneNumber: '',
     password: '',
     confirmPassword: ''
   });
@@ -23,14 +24,28 @@ const CustomerSignup = () => {
     }
 
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('http://localhost:5000/auth/signup', { ... });
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.name, // Mapping 'name' to 'username' expected by backend
+          email: formData.email,
+          password: formData.password,
+          phone_number: formData.phoneNumber
+        }),
+      });
 
-      // Simulating success
-      console.log('Signup data:', formData);
-      navigate('/login');
+      const data = await response.json();
+
+      if (response.ok) {
+        navigate('/login');
+      } else {
+        setError(data.message || 'Signup failed. Please try again.');
+      }
     } catch (err) {
-      setError('Signup failed. Please try again.');
+      setError('Network error. Is the server running?');
     }
   };
 
@@ -65,6 +80,18 @@ const CustomerSignup = () => {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition"
+              placeholder="+254..."
               required
             />
           </div>

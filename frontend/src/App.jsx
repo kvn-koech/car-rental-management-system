@@ -5,6 +5,8 @@ import LandingPage from './pages/LandingPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import CustomerSignup from './pages/CustomerSignup';
+import CustomerLogin from './pages/CustomerLogin';
+import CustomerDashboard from './pages/CustomerDashboard';
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -51,6 +53,20 @@ function App() {
           <>
             <Navbar theme={theme} toggleTheme={toggleTheme} />
             <CustomerSignup />
+          </>
+        } />
+
+        <Route path="/login" element={
+          <>
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
+            <CustomerLogin />
+          </>
+        } />
+
+        <Route path="/dashboard" element={
+          <>
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
+            <CustomerDashboard />
           </>
         } />
 

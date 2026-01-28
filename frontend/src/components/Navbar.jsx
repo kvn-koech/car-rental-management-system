@@ -40,7 +40,7 @@ const Navbar = ({ theme, toggleTheme }) => {
             </button>
 
             <div className="flex items-center gap-3 ml-2">
-              <Link to="/admin/login" className="px-5 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition">
+              <Link to="/login" className="px-5 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition">
                 Log In
               </Link>
               <Link to="/signup" className="px-5 py-2 bg-primary dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 shadow-md hover:shadow-lg transition">
@@ -91,7 +91,7 @@ const Navbar = ({ theme, toggleTheme }) => {
             <Link to="/about" className="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md">About</Link>
             <Link to="/contact" className="block px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800 rounded-md">Contact</Link>
             <div className="pt-4 flex flex-col gap-2">
-              <Link to="/admin/login" className="w-full text-center px-4 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg">
+              <Link to="/login" className="w-full text-center px-4 py-2 text-primary dark:text-blue-400 font-medium hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg">
                 Log In
               </Link>
               <Link to="/signup" className="w-full text-center px-4 py-2 bg-primary dark:bg-blue-600 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-500 shadow-md">
