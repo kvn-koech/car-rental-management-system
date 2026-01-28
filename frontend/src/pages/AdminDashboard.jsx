@@ -261,6 +261,7 @@ const AdminDashboard = () => {
               <thead className="bg-gray-50 dark:bg-slate-900/50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Car</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Contact</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Dates</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -270,6 +271,10 @@ const AdminDashboard = () => {
                 {bookings.map((booking) => (
                   <tr key={booking.id}>
                     <td className="px-6 py-4 whitespace-nowrap">{booking.car}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <div className="text-gray-900 dark:text-gray-100">{booking.user_name || 'N/A'}</div>
+                      <div className="text-gray-500 dark:text-gray-400">{booking.user_phone || 'N/A'}</div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(booking.start_date).toLocaleDateString()} - {new Date(booking.end_date).toLocaleDateString()}
                     </td>

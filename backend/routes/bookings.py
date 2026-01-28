@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, Booking, Car
+from models import db, Booking, Car, User
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from datetime import datetime
 import random
@@ -91,10 +91,12 @@ def all_bookings():
     result = []
     for booking in bookings:
         car = Car.query.get(booking.car_id)
-        # Fetch user info too in a real app
+        user = User.query.get(booking.user_id)
         result.append({
             "id": booking.id,
             "user_id": booking.user_id,
+            "user_name": user.username if user else "Unknown",
+            "user_phone": user.phone_number if user else "N/A",
             "car": f"{car.make} {car.model}",
             "start_date": booking.start_date.isoformat(),
             "end_date": booking.end_date.isoformat(),
