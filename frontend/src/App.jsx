@@ -6,6 +6,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import CustomerSignup from './pages/CustomerSignup';
 import CustomerLogin from './pages/CustomerLogin';
+import Contact from './pages/Contact';
 
 import CustomerDashboard from './pages/CustomerDashboard';
 import Fleet from './pages/Fleet';
@@ -46,6 +47,13 @@ function App() {
           <>
             <Navbar theme={theme} toggleTheme={toggleTheme} />
             <Fleet />
+          </>
+        } />
+
+        <Route path="/contact" element={
+          <>
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
+            <Contact />
           </>
         } />
 
