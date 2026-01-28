@@ -10,6 +10,7 @@ const LandingPage = () => {
         <div className="absolute inset-y-0 left-0 -z-10 w-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white via-blue-50/50 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <img src="/logo.png" alt="KPremium Rides Logo" className="mx-auto h-32 w-auto mb-6 drop-shadow-xl hover:scale-105 transition duration-500" />
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-secondary dark:text-white mb-8">
             Karibu <br className="hidden md:block" />
             <span className="text-primary dark:text-blue-400 transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-blue-400 dark:to-blue-600">KPremium Rides</span>
