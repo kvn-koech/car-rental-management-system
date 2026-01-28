@@ -344,7 +344,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
-        )}
+
 
         {/* Edit Modal */}
         {editingCar && (
