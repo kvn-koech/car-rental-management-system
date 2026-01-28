@@ -9,7 +9,10 @@ const Navbar = ({ theme, toggleTheme }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 flex items-center gap-2">
-            <Link to="/" className="text-2xl font-bold text-primary dark:text-blue-400">KPremium Rides</Link>
+            <Link to="/" className="flex items-center gap-2">
+              <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-md" />
+              <span className="text-2xl font-bold text-primary dark:text-blue-400">KPremium Rides</span>
+            </Link>
           </div>
 
           {/* Desktop Menu */}
