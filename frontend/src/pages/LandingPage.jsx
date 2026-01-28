@@ -11,8 +11,8 @@ const LandingPage = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-secondary dark:text-white mb-8">
-            Experience Kenya with <br className="hidden md:block" />
-            <span className="text-primary dark:text-blue-400 transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-blue-400 dark:to-blue-600">Premium Comfort</span>
+            Karibu <br className="hidden md:block" />
+            <span className="text-primary dark:text-blue-400 transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-blue-400 dark:to-blue-600">KPremium Rides</span>
           </h1>
           <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
             From city cruisers to safari-ready 4x4s. Enjoy affordable rates, instant booking, and 24/7 support for your journey.

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import CustomerSignup from './pages/CustomerSignup';
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -45,6 +46,13 @@ function App() {
         } />
 
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+        <Route path="/signup" element={
+          <>
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
+            <CustomerSignup />
+          </>
+        } />
 
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
