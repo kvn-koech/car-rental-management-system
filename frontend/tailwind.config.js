@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#DC2626', // Red-600 (Bold, often used in Kenyan brands)
-        secondary: '#111827', // Gray-900
-        accent: '#F59E0B', // Amber-500
+        primary: '#0EA5E9', // Sky Blue-500
+        secondary: '#0F172A', // Slate-900
+        accent: '#F0F9FF', // Sky-50
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
