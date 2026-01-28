@@ -154,13 +154,20 @@ def update_car(id):
         return jsonify({"message": "Admin access required"}), 403
         
     car = Car.query.get_or_404(id)
-    data = request.get_json()
     
+    # Handle both JSON and Form Data for compatibility/switching
+    data = None
+    if request.is_json:
+        data = request.get_json()
+    else:
+        # Use request.form
+        data = request.form
+
     if 'price_per_day' in data:
         car.price_per_day = data['price_per_day']
     if 'status' in data:
         car.status = data['status']
-    if 'image_url' in data:
+    if 'image_url' in data and data['image_url']: # Only text update if provided
         car.image_url = data['image_url']
     if 'location' in data:
         car.location = data['location']
@@ -171,6 +178,29 @@ def update_car(id):
     if 'year' in data:
         car.year = data['year']
         
+    # Handle File Uploads
+    image_urls = []
+    if 'images' in request.files:
+        files = request.files.getlist('images')
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                unique_name = f"{int(datetime.now().timestamp())}_{filename}"
+                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+                file.save(file_path)
+                
+                full_url = url_for('static', filename=f'uploads/{unique_name}', _external=True)
+                image_urls.append(full_url)
+
+    # Save new images
+    for url in image_urls:
+        img = CarImage(car_id=car.id, image_url=url)
+        db.session.add(img)
+        
+    # If car has no main image_url (e.g. legacy or deleted) and we added new ones, set first as main
+    if not car.image_url and image_urls:
+         car.image_url = image_urls[0]
+
     db.session.commit()
     return jsonify({"message": "Car updated successfully"}), 200
 

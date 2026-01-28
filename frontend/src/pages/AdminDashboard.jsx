@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   });
   const [imageFiles, setImageFiles] = useState([]);
   const [editingCar, setEditingCar] = useState(null);
+  const [editImageFiles, setEditImageFiles] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -140,25 +141,43 @@ const AdminDashboard = () => {
 
   const handleEditClick = (car) => {
     setEditingCar(car);
+    setEditImageFiles([]);
   };
 
   const handleUpdateCar = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('admin_token');
     try {
+      const formData = new FormData();
+      Object.keys(editingCar).forEach(key => {
+        // Only append simple values, avoid arrays or objects unless handled
+        if (key !== 'images') {
+          formData.append(key, editingCar[key]);
+        }
+      });
+
+      // Append new images
+      for (let i = 0; i < editImageFiles.length; i++) {
+        formData.append('images', editImageFiles[i]);
+      }
+
       const res = await fetch(`http://localhost:5000/api/cars/${editingCar.id}`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
+          // No Content-Type for FormData
         },
-        body: JSON.stringify(editingCar)
+        body: formData
       });
 
       if (res.ok) {
-        setCars(prev => prev.map(c => c.id === editingCar.id ? { ...c, ...editingCar } : c));
+        // Fetch fresh data to get new image URLs or manage locally
+        const carsRes = await fetch('http://localhost:5000/api/cars/');
+        if (carsRes.ok) setCars(await carsRes.json());
+
         alert('Car updated successfully');
         setEditingCar(null);
+        setEditImageFiles([]);
       } else {
         alert('Failed to update car');
       }
@@ -390,6 +409,17 @@ const AdminDashboard = () => {
                     <option value="rented">Rented</option>
                     <option value="maintenance">Maintenance</option>
                   </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-1 dark:text-gray-300">Add New Images</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600"
+                    onChange={e => setEditImageFiles(e.target.files)}
+                  />
                 </div>
 
                 <div className="flex justify-end gap-3 mt-8">
