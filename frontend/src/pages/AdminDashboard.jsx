@@ -13,6 +13,7 @@ const AdminDashboard = () => {
     price_per_day: '', location: '', status: 'available'
   });
   const [imageFiles, setImageFiles] = useState([]);
+  const [editingCar, setEditingCar] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -134,6 +135,35 @@ const AdminDashboard = () => {
       }
     } catch (err) {
       alert("Delete failed");
+    }
+  };
+
+  const handleEditClick = (car) => {
+    setEditingCar(car);
+  };
+
+  const handleUpdateCar = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('admin_token');
+    try {
+      const res = await fetch(`http://localhost:5000/api/cars/${editingCar.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editingCar)
+      });
+
+      if (res.ok) {
+        setCars(prev => prev.map(c => c.id === editingCar.id ? { ...c, ...editingCar } : c));
+        alert('Car updated successfully');
+        setEditingCar(null);
+      } else {
+        alert('Failed to update car');
+      }
+    } catch (err) {
+      alert('Error updating car');
     }
   };
 
@@ -302,7 +332,7 @@ const AdminDashboard = () => {
                   {/* Admin Actions could go here (Edit/Delete) */}
                   {/* Admin Actions */}
                   <div className="flex gap-2">
-                    <button className="flex-1 py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition">
+                    <button onClick={() => handleEditClick(car)} className="flex-1 py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition">
                       Edit
                     </button>
                     <button onClick={() => handleDeleteCar(car.id)} className="flex-1 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition">
@@ -311,6 +341,62 @@ const AdminDashboard = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+        )}
+
+        {/* Edit Modal */}
+        {editingCar && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-lg shadow-2xl border border-gray-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
+              <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Edit Vehicle</h3>
+              <form onSubmit={handleUpdateCar} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Make</label>
+                    <input type="text" className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={editingCar.make} onChange={e => setEditingCar({ ...editingCar, make: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Model</label>
+                    <input type="text" className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={editingCar.model} onChange={e => setEditingCar({ ...editingCar, model: e.target.value })} required />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Year</label>
+                    <input type="number" className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={editingCar.year} onChange={e => setEditingCar({ ...editingCar, year: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Price / Day</label>
+                    <input type="number" className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={editingCar.price_per_day} onChange={e => setEditingCar({ ...editingCar, price_per_day: e.target.value })} required />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 dark:text-gray-300">Location</label>
+                  <input type="text" className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={editingCar.location} onChange={e => setEditingCar({ ...editingCar, location: e.target.value })} required />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 dark:text-gray-300">Status</label>
+                  <select
+                    className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600"
+                    value={editingCar.status}
+                    onChange={e => setEditingCar({ ...editingCar, status: e.target.value })}
+                  >
+                    <option value="available">Available</option>
+                    <option value="rented">Rented</option>
+                    <option value="maintenance">Maintenance</option>
+                  </select>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-8">
+                  <button type="button" onClick={() => setEditingCar(null)} className="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition">Cancel</button>
+                  <button type="submit" className="px-4 py-2 bg-primary dark:bg-blue-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition">Update Vehicle</button>
+                </div>
+              </form>
             </div>
           </div>
         )}
