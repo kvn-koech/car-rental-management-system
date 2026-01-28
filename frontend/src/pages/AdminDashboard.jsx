@@ -199,7 +199,10 @@ const AdminDashboard = () => {
       <div className="bg-white dark:bg-slate-800 shadow-sm border-b border-gray-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <span className="text-xl font-bold text-primary dark:text-blue-400">Admin Dashboard</span>
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="Logo" className="h-10 w-auto rounded-md" />
+              <span className="text-xl font-bold text-primary dark:text-blue-400">Admin Dashboard</span>
+            </div>
             <button onClick={logout} className="text-red-500 hover:text-red-600 font-medium">Logout</button>
           </div>
         </div>
