@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('bookings');
+  const [activeTab, setActiveTab] = useState('overview');
   const [bookings, setBookings] = useState([]);
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ revenue: 0, pendingBookings: 0, activeFleet: 0 });
   const [showAddCar, setShowAddCar] = useState(false);
   const [newCar, setNewCar] = useState({
     make: '', model: '', year: new Date().getFullYear(),
@@ -35,7 +36,15 @@ const AdminDashboard = () => {
 
         // Fetch Cars (No auth needed for read, but consistent)
         const carsRes = await fetch('http://localhost:5000/api/cars/', { headers });
-        if (carsRes.ok) setCars(await carsRes.json());
+        if (carsRes.ok) {
+          const carsData = await carsRes.json();
+          setCars(carsData);
+
+          // Calculate stats (Mock logic for revenue)
+          const activeFleet = carsData.filter(c => c.status === 'available').length;
+          // If bookings are loaded
+          // setStats({ ...stats, activeFleet }); 
+        }
 
       } catch (err) {
         console.error("Failed to fetch data", err);
@@ -102,6 +111,24 @@ const AdminDashboard = () => {
       }
     };
 
+    const handleDeleteCar = async (id) => {
+      if (!window.confirm("Are you sure you want to delete this car?")) return;
+
+      const token = localStorage.getItem('admin_token');
+      try {
+        const res = await fetch(`http://localhost:5000/api/cars/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          setCars(prev => prev.filter(c => c.id !== id));
+          alert("Car deleted");
+        }
+      } catch (err) {
+        alert("Delete failed");
+      }
+    };
+
     const logout = () => {
       localStorage.removeItem('admin_token');
       localStorage.removeItem('user_role');
@@ -122,8 +149,30 @@ const AdminDashboard = () => {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Stats overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700">
+              <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Revenue</h3>
+              <p className="text-2xl font-bold mt-2">KES 124,000</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700">
+              <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Active Bookings</h3>
+              <p className="text-2xl font-bold mt-2">{bookings.filter(b => b.status === 'confirmed').length}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700">
+              <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Fleet Size</h3>
+              <p className="text-2xl font-bold mt-2">{cars.length}</p>
+            </div>
+          </div>
+
           {/* Tabs */}
           <div className="flex space-x-4 mb-8">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === 'overview' ? 'bg-primary dark:bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700'}`}
+            >
+              Overview
+            </button>
             <button
               onClick={() => setActiveTab('bookings')}
               className={`px-4 py-2 rounded-lg font-medium transition ${activeTab === 'bookings' ? 'bg-primary dark:bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700'}`}
@@ -137,6 +186,13 @@ const AdminDashboard = () => {
               Fleet Management
             </button>
           </div>
+
+          {activeTab === 'overview' && (
+            <div className="bg-white dark:bg-slate-800 p-8 rounded-xl text-center text-gray-500">
+              <h3 className="text-xl font-medium mb-4">Welcome to the Admin Dashboard</h3>
+              <p>Select a tab above to manage bookings or your fleet.</p>
+            </div>
+          )}
 
           {/* Bookings Tab */}
           {activeTab === 'bookings' && (
@@ -225,9 +281,15 @@ const AdminDashboard = () => {
                       {car.price_per_day.toLocaleString()} KES <span className="text-xs text-gray-500 font-normal">/ day</span>
                     </div>
                     {/* Admin Actions could go here (Edit/Delete) */}
-                    <button className="w-full py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition">
-                      Edit Vehicle
-                    </button>
+                    {/* Admin Actions */}
+                    <div className="flex gap-2">
+                      <button className="flex-1 py-2 bg-gray-100 dark:bg-slate-700 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteCar(car.id)} className="flex-1 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition">
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
