@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from config import Config
@@ -13,6 +14,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     CORS(app)
     JWTManager(app)
+
+    # Ensure upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')

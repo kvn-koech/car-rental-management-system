@@ -30,6 +30,13 @@ class Car(db.Model):
     image_url = db.Column(db.String(255))
     status = db.Column(db.String(20), default='available') # available, rented, maintenance
     location = db.Column(db.String(50), nullable=False) # Nairobi, Mombasa...
+    images = db.relationship('CarImage', backref='car', lazy=True, cascade="all, delete-orphan")
+
+class CarImage(db.Model):
+    __tablename__ = 'car_images'
+    id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer, db.ForeignKey('cars.id'), nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
 
 class Booking(db.Model):
     __tablename__ = 'bookings'

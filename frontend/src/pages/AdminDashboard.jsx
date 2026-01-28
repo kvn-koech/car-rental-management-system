@@ -10,8 +10,9 @@ const AdminDashboard = () => {
   const [showAddCar, setShowAddCar] = useState(false);
   const [newCar, setNewCar] = useState({
     make: '', model: '', year: new Date().getFullYear(),
-    price_per_day: '', image_url: '', location: '', status: 'available'
+    price_per_day: '', location: '', status: 'available'
   });
+  const [imageFiles, setImageFiles] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,13 +82,21 @@ const AdminDashboard = () => {
     e.preventDefault();
     const token = localStorage.getItem('admin_token');
     try {
+      const formData = new FormData();
+      Object.keys(newCar).forEach(key => formData.append(key, newCar[key]));
+
+      // Append images
+      for (let i = 0; i < imageFiles.length; i++) {
+        formData.append('images', imageFiles[i]);
+      }
+
       const res = await fetch('http://localhost:5000/api/cars/', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Bearer ${token}`
+          // Content-Type not set for FormData, browser sets multipart/boundary
         },
-        body: JSON.stringify(newCar)
+        body: formData
       });
 
       if (res.ok) {
@@ -95,8 +104,9 @@ const AdminDashboard = () => {
         setShowAddCar(false);
         setNewCar({
           make: '', model: '', year: new Date().getFullYear(),
-          price_per_day: '', image_url: '', location: '', status: 'available'
+          price_per_day: '', location: '', status: 'available'
         });
+        setImageFiles([]);
         // Refresh cars
         const carsRes = await fetch('http://localhost:5000/api/cars/');
         if (carsRes.ok) setCars(await carsRes.json());
@@ -255,7 +265,18 @@ const AdminDashboard = () => {
                   <input type="number" placeholder="Year" className="p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={newCar.year} onChange={e => setNewCar({ ...newCar, year: e.target.value })} required />
                   <input type="number" placeholder="Price per Day (KES)" className="p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={newCar.price_per_day} onChange={e => setNewCar({ ...newCar, price_per_day: e.target.value })} required />
                   <input type="text" placeholder="Location" className="p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={newCar.location} onChange={e => setNewCar({ ...newCar, location: e.target.value })} required />
-                  <input type="url" placeholder="Image URL" className="p-2 border rounded dark:bg-slate-700 dark:border-slate-600" value={newCar.image_url} onChange={e => setNewCar({ ...newCar, image_url: e.target.value })} />
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium mb-1 dark:text-gray-300">Upload Images</label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="w-full p-2 border rounded dark:bg-slate-700 dark:border-slate-600"
+                      onChange={e => setImageFiles(e.target.files)}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">First image will be the main thumbnail.</p>
+                  </div>
                   <div className="md:col-span-2">
                     <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">Save Vehicle</button>
                   </div>
