@@ -6,7 +6,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import CustomerSignup from './pages/CustomerSignup';
 import CustomerLogin from './pages/CustomerLogin';
-import CustomerLogin from './pages/CustomerLogin';
+
 import CustomerDashboard from './pages/CustomerDashboard';
 import Fleet from './pages/Fleet';
 
@@ -35,11 +35,6 @@ function App() {
   return (
     <div className="min-h-screen transition-colors duration-300 font-sans text-secondary dark:text-white bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <Routes>
-        <Route path="/" element={
-          <>
-            <Navbar theme={theme} toggleTheme={toggleTheme} />
-            <LandingPage />
-          </>
         <Route path="/" element={
           <>
             <Navbar theme={theme} toggleTheme={toggleTheme} />
