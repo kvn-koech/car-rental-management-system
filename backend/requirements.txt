@@ -6,3 +6,5 @@ flask-migrate
 flask-jwt-extended
 faker
 werkzeug
+gunicorn
+psycopg2-binary
