@@ -100,45 +100,47 @@ DESCRIPTIONS = {
 # Local static image URLs — served by Flask from static/uploads/
 BASE_STATIC = 'http://localhost:5000/static/uploads'
 
-# (make, model) -> image filename; falls back to make, then FALLBACK
+# Full 1-to-1 per-model image mapping
 MODEL_IMAGES = {
+    # Economy
     ('Toyota',    'Vitz'):          'car_vitz.png',
-    ('Toyota',    'Axio'):          'car_vitz.png',
+    ('Toyota',    'Axio'):          'car_axio.png',
+    ('Nissan',    'Note'):          'car_nissan_note.png',
+    ('Suzuki',    'Swift'):         'car_suzuki_swift.png',
+    ('Honda',     'Fit'):           'car_honda_fit.png',
+    # Saloon
     ('Toyota',    'Premio'):        'car_premio.png',
-    ('Toyota',    'Allion'):        'car_premio.png',
+    ('Toyota',    'Allion'):        'car_toyota_allion.png',
+    ('Mazda',     'Atenza'):        'car_mazda_atenza.png',
+    ('Subaru',    'Impreza'):       'car_subaru_impreza.png',
+    ('Honda',     'Accord'):        'car_honda_accord.png',
+    # SUV / 4x4
     ('Toyota',    'RAV4'):          'car_rav4.png',
     ('Toyota',    'Fortuner'):      'car_fortuner.png',
     ('Toyota',    'Land Cruiser'):  'car_landcruiser.png',
+    ('Mitsubishi','Pajero'):        'car_fortuner.png',       # closest match
+    ('Nissan',    'X-Trail'):       'car_rav4.png',           # closest match
+    ('Subaru',    'Forester'):      'car_subaru.png',
+    ('Land Rover','Defender'):      'car_landcruiser.png',    # closest match
+    # Premium
+    ('Mercedes',  'C-Class'):       'car_mercedes.png',
+    ('BMW',       '3 Series'):      'car_mercedes.png',       # closest match
+    ('Audi',      'A4'):            'car_mercedes.png',       # closest match
+    # Van
     ('Toyota',    'Hiace'):         'car_hiace.png',
     ('Toyota',    'Noah'):          'car_hiace.png',
+    ('Nissan',    'Serena'):        'car_hiace.png',          # closest match
+    # Green
     ('Toyota',    'Prius'):         'car_prius.png',
-    ('Subaru',    'Forester'):      'car_subaru.png',
-    ('Subaru',    'Impreza'):       'car_subaru.png',
-    ('Mercedes',  'C-Class'):       'car_mercedes.png',
-}
-
-MAKE_IMAGES = {
-    'Toyota':     'car_premio.png',
-    'Subaru':     'car_subaru.png',
-    'Mercedes':   'car_mercedes.png',
-    'BMW':        'car_mercedes.png',
-    'Audi':       'car_mercedes.png',
-    'Mitsubishi': 'car_fortuner.png',
-    'Land Rover': 'car_landcruiser.png',
-    'Nissan':     'car_rav4.png',
-    'Honda':      'car_vitz.png',
-    'Suzuki':     'car_vitz.png',
-    'Mazda':      'car_premio.png',
+    ('Nissan',    'Leaf'):          'car_prius.png',          # closest match
 }
 
 FALLBACK_IMAGE = f'{BASE_STATIC}/car_premio.png'
 
 
 def get_image_url(make, model):
-    fname = MODEL_IMAGES.get((make, model)) or MAKE_IMAGES.get(make)
-    if fname:
-        return f'{BASE_STATIC}/{fname}'
-    return FALLBACK_IMAGE
+    fname = MODEL_IMAGES.get((make, model))
+    return f'{BASE_STATIC}/{fname}' if fname else FALLBACK_IMAGE
 
 
 def phone_ke():
