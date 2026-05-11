@@ -6,13 +6,14 @@ from config import Config
 from models import db
 from routes.auth import auth_bp
 
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
     # Initialize extensions
     db.init_app(app)
-    CORS(app)
+    CORS(app, origins=[app.config['FRONTEND_URL']], supports_credentials=True)
     JWTManager(app)
 
     # Ensure upload folder exists
@@ -20,10 +21,10 @@ def create_app(config_class=Config):
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    
+
     from routes.cars import cars_bp
     app.register_blueprint(cars_bp, url_prefix='/api/cars')
-    
+
     from routes.bookings import bookings_bp
     app.register_blueprint(bookings_bp, url_prefix='/api/bookings')
 
@@ -36,6 +37,7 @@ def create_app(config_class=Config):
         return {"status": "healthy"}
 
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

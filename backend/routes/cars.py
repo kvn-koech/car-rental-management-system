@@ -7,36 +7,51 @@ from datetime import datetime
 
 cars_bp = Blueprint('cars', __name__)
 
+
+def allowed_file(filename):
+    return (
+        '.' in filename
+        and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+    )
+
+
+def save_uploaded_images(files):
+    """Save a list of FileStorage objects; return list of public URL strings."""
+    image_urls = []
+    for file in files:
+        if file and file.filename:
+            if not allowed_file(file.filename):
+                continue  # skip disallowed file types
+            filename = secure_filename(file.filename)
+            unique_name = f"{int(datetime.now().timestamp())}_{filename}"
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
+            file.save(file_path)
+            full_url = url_for('static', filename=f'uploads/{unique_name}', _external=True)
+            image_urls.append(full_url)
+    return image_urls
+
+
 @cars_bp.route('/', methods=['GET'])
 def get_cars():
     location = request.args.get('location')
-    
+    status = request.args.get('status')
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
+
     query = Car.query
+
     if location:
         query = query.filter(Car.location.ilike(f'%{location}%'))
-    
-    # Optional: Filter by status available if not admin? 
-    # For now, let everyone see all cars, but maybe UI filters it.
-        
+    if status:
+        query = query.filter(Car.status == status)
+    if min_price is not None:
+        query = query.filter(Car.price_per_day >= min_price)
+    if max_price is not None:
+        query = query.filter(Car.price_per_day <= max_price)
+
     cars = query.all()
-    
-    result = []
-    for car in cars:
-        result.append({
-            "id": car.id,
-            "make": car.make,
-            "model": car.model,
-            "year": car.year,
-            "price_per_day": car.price_per_day,
-            "image_url": car.image_url,
-            "status": car.status,
-            "image_url": car.image_url, # Main image (thumbnail)
-            "status": car.status,
-            "location": car.location,
-            "images": [img.image_url for img in car.images]
-        })
-        
-    return jsonify(result), 200
+    return jsonify([car.to_dict() for car in cars]), 200
+
 
 @cars_bp.route('/', methods=['POST'])
 @jwt_required()
@@ -45,106 +60,57 @@ def add_car():
     if not claims.get('is_admin'):
         return jsonify({"message": "Admin access required"}), 403
 
-    # Handle non-file data which comes as form data now
-    # If content-type is multipart/form-data, request.get_json() might return None or differ.
-    # We use request.form for text fields
-    
     make = request.form.get('make')
     model = request.form.get('model')
     year = request.form.get('year')
     price_per_day = request.form.get('price_per_day')
     location = request.form.get('location')
     status = request.form.get('status', 'available')
-    
+    seats = request.form.get('seats', 5)
+    transmission = request.form.get('transmission', 'automatic')
+    fuel_type = request.form.get('fuel_type', 'petrol')
+    description = request.form.get('description', '')
+
+    if not all([make, model, year, price_per_day, location]):
+        return jsonify({"message": "Missing required fields"}), 400
+
     new_car = Car(
         make=make,
         model=model,
-        year=year,
-        price_per_day=price_per_day,
+        year=int(year),
+        price_per_day=float(price_per_day),
         location=location,
-        status=status
+        status=status,
+        seats=int(seats),
+        transmission=transmission,
+        fuel_type=fuel_type,
+        description=description,
     )
-    
-    # Handle File Uploads
-    if 'images' in request.files:
-        files = request.files.getlist('images')
-        for i, file in enumerate(files):
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                # Ensure unique filename
-                filename = f"{datetime.now().timestamp()}_{filename}"
-                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-                
-                # Construct URL
-                # Assuming app serves static files from /static/uploads
-                image_path = url_for('static', filename=f'uploads/{filename}', _external=True)
-                
-                # Set first image as main thumbnail
-                if i == 0:
-                    new_car.image_url = image_path
-                
-                # Create CarImage record (after commit of car? No, need car id. So add car first)
-                
-    db.session.add(new_car)
-    db.session.commit()
-    
-    # Now add images
-    if 'images' in request.files:
-        files = request.files.getlist('images')
-        for i, file in enumerate(files):
-            if file and file.filename:
-                # We essentially re-save or just re-loop? 
-                # Better to save filenames in list above and loop here.
-                # Simplification: Just re-do the logic or optimize.
-                # Optimization:
-                pass 
 
-    # Correct Logic:
-    # 1. Save files, collect URLs.
-    # 2. Add Car.
-    # 3. Add CarImages.
-    
+    # Save uploaded images (single pass, no duplication)
     image_urls = []
     if 'images' in request.files:
-        files = request.files.getlist('images')
-        for file in files:
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                unique_name = f"{int(datetime.now().timestamp())}_{filename}"
-                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
-                file.save(file_path)
-                
-                full_url = url_for('static', filename=f'uploads/{unique_name}', _external=True)
-                image_urls.append(full_url)
-    
+        image_urls = save_uploaded_images(request.files.getlist('images'))
+
     if image_urls:
-        new_car.image_url = image_urls[0] # First one as main
-        
+        new_car.image_url = image_urls[0]
+
     db.session.add(new_car)
-    db.session.commit() # Get ID
-    
+    db.session.commit()  # commit to get new_car.id
+
     for url in image_urls:
-        img = CarImage(car_id=new_car.id, image_url=url)
-        db.session.add(img)
-    
+        db.session.add(CarImage(car_id=new_car.id, image_url=url))
+
     db.session.commit()
 
     return jsonify({"message": "Car added successfully", "id": new_car.id}), 201
 
+
 @cars_bp.route('/<int:id>', methods=['GET'])
 def get_car(id):
     car = Car.query.get_or_404(id)
-    return jsonify({
-        "id": car.id,
-        "make": car.make,
-        "model": car.model,
-        "price_per_day": car.price_per_day,
-        "location": car.location,
-        "image_url": car.image_url,
-        "status": car.status,
-        "year": car.year,
-        "images": [img.image_url for img in car.images]
-    }), 200
+    return jsonify(car.to_dict()), 200
+
 
 @cars_bp.route('/<int:id>', methods=['PATCH'])
 @jwt_required()
@@ -152,57 +118,39 @@ def update_car(id):
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify({"message": "Admin access required"}), 403
-        
+
     car = Car.query.get_or_404(id)
-    
-    # Handle both JSON and Form Data for compatibility/switching
-    data = None
-    if request.is_json:
-        data = request.get_json()
-    else:
-        # Use request.form
-        data = request.form
 
-    if 'price_per_day' in data:
-        car.price_per_day = data['price_per_day']
-    if 'status' in data:
-        car.status = data['status']
-    if 'image_url' in data and data['image_url']: # Only text update if provided
+    data = request.get_json() if request.is_json else request.form
+
+    updatable = ['price_per_day', 'status', 'location', 'make', 'model',
+                 'year', 'seats', 'transmission', 'fuel_type', 'description']
+    for field in updatable:
+        if field in data and data[field] != '':
+            # Cast numeric fields
+            if field in ('price_per_day',):
+                setattr(car, field, float(data[field]))
+            elif field in ('year', 'seats'):
+                setattr(car, field, int(data[field]))
+            else:
+                setattr(car, field, data[field])
+
+    # Handle image_url text update (optional)
+    if 'image_url' in data and data['image_url']:
         car.image_url = data['image_url']
-    if 'location' in data:
-        car.location = data['location']
-    if 'make' in data:
-        car.make = data['make']
-    if 'model' in data:
-        car.model = data['model']
-    if 'year' in data:
-        car.year = data['year']
-        
-    # Handle File Uploads
-    image_urls = []
-    if 'images' in request.files:
-        files = request.files.getlist('images')
-        for file in files:
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                unique_name = f"{int(datetime.now().timestamp())}_{filename}"
-                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_name)
-                file.save(file_path)
-                
-                full_url = url_for('static', filename=f'uploads/{unique_name}', _external=True)
-                image_urls.append(full_url)
 
-    # Save new images
-    for url in image_urls:
-        img = CarImage(car_id=car.id, image_url=url)
-        db.session.add(img)
-        
-    # If car has no main image_url (e.g. legacy or deleted) and we added new ones, set first as main
-    if not car.image_url and image_urls:
-         car.image_url = image_urls[0]
+    # Handle new file uploads (appended, not replaced)
+    if 'images' in request.files:
+        new_urls = save_uploaded_images(request.files.getlist('images'))
+        for url in new_urls:
+            db.session.add(CarImage(car_id=car.id, image_url=url))
+        # If no main image yet, set the first new one
+        if not car.image_url and new_urls:
+            car.image_url = new_urls[0]
 
     db.session.commit()
-    return jsonify({"message": "Car updated successfully"}), 200
+    return jsonify({"message": "Car updated successfully", "car": car.to_dict()}), 200
+
 
 @cars_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -210,7 +158,7 @@ def delete_car(id):
     claims = get_jwt()
     if not claims.get('is_admin'):
         return jsonify({"message": "Admin access required"}), 403
-        
+
     car = Car.query.get_or_404(id)
     db.session.delete(car)
     db.session.commit()
