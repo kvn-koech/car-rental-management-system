@@ -97,23 +97,48 @@ DESCRIPTIONS = {
     ],
 }
 
-# Realistic Unsplash car image URLs (stable, no API key needed)
-IMAGE_URLS = {
-    'Toyota':     'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&q=80',
-    'Nissan':     'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80',
-    'Honda':      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80',
-    'Suzuki':     'https://images.unsplash.com/photo-1609752940005-4d0f8c42c8a6?w=800&q=80',
-    'Mazda':      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
-    'Subaru':     'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80',
-    'Mitsubishi': 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800&q=80',
-    'Land Rover': 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&q=80',
-    'Mercedes':   'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80',
-    'BMW':        'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80',
-    'Audi':       'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80',
-    'Nissan':     'https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80',
+# Local static image URLs — served by Flask from static/uploads/
+BASE_STATIC = 'http://localhost:5000/static/uploads'
+
+# (make, model) -> image filename; falls back to make, then FALLBACK
+MODEL_IMAGES = {
+    ('Toyota',    'Vitz'):          'car_vitz.png',
+    ('Toyota',    'Axio'):          'car_vitz.png',
+    ('Toyota',    'Premio'):        'car_premio.png',
+    ('Toyota',    'Allion'):        'car_premio.png',
+    ('Toyota',    'RAV4'):          'car_rav4.png',
+    ('Toyota',    'Fortuner'):      'car_fortuner.png',
+    ('Toyota',    'Land Cruiser'):  'car_landcruiser.png',
+    ('Toyota',    'Hiace'):         'car_hiace.png',
+    ('Toyota',    'Noah'):          'car_hiace.png',
+    ('Toyota',    'Prius'):         'car_prius.png',
+    ('Subaru',    'Forester'):      'car_subaru.png',
+    ('Subaru',    'Impreza'):       'car_subaru.png',
+    ('Mercedes',  'C-Class'):       'car_mercedes.png',
 }
 
-FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=80'
+MAKE_IMAGES = {
+    'Toyota':     'car_premio.png',
+    'Subaru':     'car_subaru.png',
+    'Mercedes':   'car_mercedes.png',
+    'BMW':        'car_mercedes.png',
+    'Audi':       'car_mercedes.png',
+    'Mitsubishi': 'car_fortuner.png',
+    'Land Rover': 'car_landcruiser.png',
+    'Nissan':     'car_rav4.png',
+    'Honda':      'car_vitz.png',
+    'Suzuki':     'car_vitz.png',
+    'Mazda':      'car_premio.png',
+}
+
+FALLBACK_IMAGE = f'{BASE_STATIC}/car_premio.png'
+
+
+def get_image_url(make, model):
+    fname = MODEL_IMAGES.get((make, model)) or MAKE_IMAGES.get(make)
+    if fname:
+        return f'{BASE_STATIC}/{fname}'
+    return FALLBACK_IMAGE
 
 
 def phone_ke():
@@ -174,7 +199,7 @@ def seed():
                 weights=[60, 60, 60, 15, 5], k=1
             )[0]
 
-            image_url = IMAGE_URLS.get(make, FALLBACK_IMAGE)
+            image_url = get_image_url(make, model)
             desc = random.choice(DESCRIPTIONS.get(category, DESCRIPTIONS['Economy']))
 
             car = Car(
