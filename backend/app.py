@@ -13,7 +13,8 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     db.init_app(app)
-    CORS(app, origins=[app.config['FRONTEND_URL']], supports_credentials=True)
+    frontend_url = app.config['FRONTEND_URL'].rstrip('/')
+    CORS(app, origins=[frontend_url, f"{frontend_url}/"], supports_credentials=True)
     JWTManager(app)
 
     # Ensure upload folder exists
