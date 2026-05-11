@@ -3,6 +3,7 @@ services:
   - type: web
     name: car-rental-backend
     env: python
+    plan: free
     buildCommand: "cd backend && ./render_build.sh"
     startCommand: "cd backend && gunicorn 'app:create_app()'"
     envVars:
@@ -21,6 +22,7 @@ services:
   - type: web
     name: car-rental-frontend
     env: static
+    plan: free
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "./frontend/dist"
     envVars:
@@ -35,3 +37,4 @@ databases:
   - name: car-rental-db
     databaseName: carrental
     user: carrental
+    plan: free
