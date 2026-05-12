@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiPost } from '../api';
 
 const AdminLogin = () => {
   const [secretKey, setSecretKey] = useState('');
@@ -9,11 +10,7 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/auth/admin-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ secret_key: secretKey }),
-      });
+      const response = await apiPost('/api/auth/admin-login', { secret_key: secretKey });
 
       const data = await response.json();
 
@@ -25,7 +22,7 @@ const AdminLogin = () => {
         setError(data.message || 'Login failed');
       }
     } catch (err) {
-      setError('Network error. Is the server running?');
+      setError('Network error. Could not reach the server.');
     }
   };
 
