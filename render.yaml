@@ -16,7 +16,7 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: FRONTEND_URL
-        value: "<your-frontend-url-here>" # E.g., https://car-rental-frontend.onrender.com
+        value: "https://car-rental-frontend-qvjc.onrender.com"
 
   # Frontend Static Site
   - type: web
@@ -26,7 +26,7 @@ services:
     staticPublishPath: "./frontend/dist"
     envVars:
       - key: VITE_API_URL
-        value: "<your-backend-url-here>" # E.g., https://car-rental-backend.onrender.com
+        value: "https://car-rental-backend-ibnc.onrender.com"
     routes:
       - type: rewrite
         source: /*
