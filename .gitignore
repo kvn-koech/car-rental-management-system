@@ -13,8 +13,10 @@ venv/
 *.db
 *.sqlite3
 
-# Flask uploads (local files, not for git)
-backend/static/uploads/
+# Flask uploads (runtime user files — not for git)
+backend/static/uploads/*
+# But DO track the seed car images
+!backend/static/uploads/car_*.png
 
 # Node
 node_modules/

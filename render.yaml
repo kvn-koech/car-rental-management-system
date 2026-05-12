@@ -17,6 +17,8 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: "https://car-rental-frontend-qvjc.onrender.com"
+      - key: BACKEND_URL
+        value: "https://car-rental-backend-ibnc.onrender.com"
 
   # Frontend Static Site
   - type: web
