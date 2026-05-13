@@ -10,10 +10,6 @@ import { Users, Fuel, Settings } from 'lucide-react';
 const FeaturedCars = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cars', 'featured'],
-    queryFn: async () => {
-      if (!res.ok) throw new Error('Failed to fetch cars');
-      return res.json();
-    },
   });
 
   if (isLoading) return <div className="py-20 text-center">Loading featured cars...</div>;
@@ -34,6 +30,7 @@ const FeaturedCars = () => {
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-48">
                 <img
+                  src={car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop'}
                   alt={`${car.make} ${car.model}`}
                   className="w-full h-full object-cover"
                 />
