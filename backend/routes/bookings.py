@@ -19,11 +19,19 @@ def create_booking():
     # Ensure user exists in DB
     user = User.query.get(user_id)
     if not user:
-        return jsonify({"message": "User not found"}), 404
+        return jsonify({"message": "User session invalid or not found. Please log in again."}), 401
 
     data = request.get_json()
+    if not data:
+        return jsonify({"message": "Invalid request body"}), 400
 
-    car = Car.query.get_or_404(data['car_id'])
+    car_id = data.get('car_id')
+    if not car_id:
+        return jsonify({"message": "car_id is required"}), 400
+
+    car = Car.query.get(car_id)
+    if not car:
+        return jsonify({"message": "Car not found"}), 404
 
     if car.status != 'available':
         return jsonify({"message": "This car is not currently available for booking"}), 409
@@ -33,6 +41,9 @@ def create_booking():
         s_raw = data.get('start_date', '')
         e_raw = data.get('end_date', '')
         
+        if not s_raw or not e_raw:
+            return jsonify({"message": "Start and end dates are required"}), 400
+
         if 'T' in s_raw:
             start_date = datetime.fromisoformat(s_raw.replace('Z', '+00:00'))
         else:

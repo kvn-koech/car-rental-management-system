@@ -15,6 +15,8 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         localStorage.setItem('admin_token', data.access_token);
         localStorage.setItem('user_role', 'admin');
         navigate('/admin/dashboard');

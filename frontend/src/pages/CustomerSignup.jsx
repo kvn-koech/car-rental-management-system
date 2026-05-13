@@ -60,6 +60,7 @@ const CustomerSignup = () => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.removeItem('admin_token');
         navigate('/login');
       } else {
         setError(data.message || 'Signup failed. Please try again.');

@@ -13,8 +13,16 @@ def create_app(config_class=Config):
 
     # Initialize extensions
     db.init_app(app)
+    
+    # Configure CORS to be more flexible for development
     frontend_url = app.config['FRONTEND_URL'].rstrip('/')
-    CORS(app, origins=[frontend_url, f"{frontend_url}/"], supports_credentials=True)
+    origins = [
+        frontend_url, 
+        f"{frontend_url}/",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ]
+    CORS(app, origins=list(set(origins)), supports_credentials=True)
     JWTManager(app)
 
     # Ensure upload folder exists

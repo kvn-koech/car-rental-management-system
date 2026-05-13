@@ -23,6 +23,7 @@ const CustomerLogin = () => {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.removeItem('admin_token');
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
         navigate('/dashboard');
