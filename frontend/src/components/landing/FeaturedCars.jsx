@@ -28,16 +28,6 @@ const FeaturedCars = () => {
 
   const cars = data?.cars || [];
 
-  const getKenyanImage = (car) => {
-    const key = `${car.make.toLowerCase()} ${car.model.toLowerCase()}`;
-    const mapping = {
-      'mazda cx-5': cx5Img,
-      'mazda atenza': atenzaImg,
-      'toyota premio': premioImg,
-      'toyota land cruiser prado': pradoImg
-    };
-    return mapping[key] || car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
-  };
 
   return (
     <section className="py-16 bg-gray-50">
