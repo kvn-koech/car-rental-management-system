@@ -29,7 +29,6 @@ LOCATIONS = [
 # (make, model, category, seats, transmission, fuel_type, base_price)
 CAR_CATALOGUE = [
     # Featured / Requested
-    ('Mazda',     'CX-5',           'SUV',       5, 'automatic', 'petrol',  8500),
     ('Mazda',     'Atenza',         'Saloon',    5, 'automatic', 'petrol',  6000),
     ('Toyota',    'Premio',         'Saloon',    5, 'automatic', 'petrol',  5500),
     ('Toyota',    'Land Cruiser Prado', 'SUV',   7, 'automatic', 'diesel',  15000),
@@ -108,7 +107,6 @@ BASE_STATIC = f'{_backend_url}/static/uploads'
 # Full 1-to-1 per-model image mapping
 MODEL_IMAGES = {
     # Featured
-    ('Mazda',     'CX-5'):          'car_cx5.png',
     ('Mazda',     'Atenza'):        'car_mazda_atenza.png',
     ('Toyota',    'Premio'):        'car_premio.png',
     ('Toyota',    'Land Cruiser Prado'): 'car_landcruiser.png',

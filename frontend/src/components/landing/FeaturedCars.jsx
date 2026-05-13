@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Users, Fuel, Settings } from 'lucide-react';
 
 // Import local Kenyan car images
-import cx5Img from '../../assets/images/cx5_kenya.png';
 import atenzaImg from '../../assets/images/atenza_kenya.png';
 import premioImg from '../../assets/images/premio_kenya.png';
 import pradoImg from '../../assets/images/hero_kenya.png';
@@ -17,7 +16,7 @@ const FeaturedCars = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cars', 'featured'],
     queryFn: async () => {
-      const res = await apiGet('/api/cars?per_page=4');
+      const res = await apiGet('/api/cars?per_page=3');
       if (!res.ok) throw new Error('Failed to fetch cars');
       return res.json();
     },
@@ -28,11 +27,6 @@ const FeaturedCars = () => {
     const make = car.make?.toLowerCase().trim() || '';
     const model = car.model?.toLowerCase().trim() || '';
     const fullKey = `${make} ${model}`;
-    
-    // Explicit matching for CX-5 variations
-    if (make === 'mazda' && (model.includes('cx-5') || model.includes('cx5'))) {
-      return cx5Img;
-    }
     
     const mapping = {
       'mazda atenza': atenzaImg,
@@ -56,7 +50,7 @@ const FeaturedCars = () => {
           <p className="mt-4 text-xl text-gray-500">Choose from our most popular premium vehicles</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {cars.map((car) => (
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-48">
