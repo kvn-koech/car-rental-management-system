@@ -11,7 +11,6 @@ const FeaturedCars = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cars', 'featured'],
     queryFn: async () => {
-      const res = await apiGet('/api/cars?per_page=3');
       if (!res.ok) throw new Error('Failed to fetch cars');
       return res.json();
     },

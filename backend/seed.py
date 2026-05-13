@@ -28,6 +28,12 @@ LOCATIONS = [
 
 # (make, model, category, seats, transmission, fuel_type, base_price)
 CAR_CATALOGUE = [
+    # Featured / Requested
+    ('Mazda',     'CX-5',           'SUV',       5, 'automatic', 'petrol',  8500),
+    ('Mazda',     'Atenza',         'Saloon',    5, 'automatic', 'petrol',  6000),
+    ('Toyota',    'Premio',         'Saloon',    5, 'automatic', 'petrol',  5500),
+    ('Toyota',    'Land Cruiser Prado', 'SUV',   7, 'automatic', 'diesel',  15000),
+    
     # Budget / Economy
     ('Toyota',    'Vitz',           'Economy',   5, 'automatic', 'petrol',  3500),
     ('Toyota',    'Axio',           'Economy',   5, 'automatic', 'petrol',  4000),
@@ -35,15 +41,12 @@ CAR_CATALOGUE = [
     ('Suzuki',    'Swift',          'Economy',   5, 'manual',    'petrol',  3200),
     ('Honda',     'Fit',            'Economy',   5, 'automatic', 'petrol',  3600),
     # Mid-range / Saloon
-    ('Toyota',    'Premio',         'Saloon',    5, 'automatic', 'petrol',  5500),
     ('Toyota',    'Allion',         'Saloon',    5, 'automatic', 'petrol',  5800),
-    ('Mazda',     'Atenza',         'Saloon',    5, 'automatic', 'petrol',  6000),
     ('Subaru',    'Impreza',        'Saloon',    5, 'automatic', 'petrol',  6500),
     ('Honda',     'Accord',         'Saloon',    5, 'automatic', 'petrol',  7000),
     # SUV / 4x4
     ('Toyota',    'RAV4',           'SUV',       5, 'automatic', 'petrol',  8500),
     ('Toyota',    'Fortuner',       'SUV',       7, 'automatic', 'diesel',  12000),
-    ('Toyota',    'Land Cruiser',   'SUV',       7, 'automatic', 'diesel',  18000),
     ('Mitsubishi','Pajero',         'SUV',       7, 'automatic', 'diesel',  14000),
     ('Nissan',    'X-Trail',        'SUV',       5, 'automatic', 'petrol',  9000),
     ('Subaru',    'Forester',       'SUV',       5, 'automatic', 'petrol',  9500),
@@ -104,6 +107,12 @@ BASE_STATIC = f'{_backend_url}/static/uploads'
 
 # Full 1-to-1 per-model image mapping
 MODEL_IMAGES = {
+    # Featured
+    ('Mazda',     'CX-5'):          'car_cx5.png',
+    ('Mazda',     'Atenza'):        'car_mazda_atenza.png',
+    ('Toyota',    'Premio'):        'car_premio.png',
+    ('Toyota',    'Land Cruiser Prado'): 'car_landcruiser.png',
+    
     # Economy
     ('Toyota',    'Vitz'):          'car_vitz.png',
     ('Toyota',    'Axio'):          'car_axio.png',
@@ -111,15 +120,12 @@ MODEL_IMAGES = {
     ('Suzuki',    'Swift'):         'car_suzuki_swift.png',
     ('Honda',     'Fit'):           'car_honda_fit.png',
     # Saloon
-    ('Toyota',    'Premio'):        'car_premio.png',
     ('Toyota',    'Allion'):        'car_toyota_allion.png',
-    ('Mazda',     'Atenza'):        'car_mazda_atenza.png',
     ('Subaru',    'Impreza'):       'car_subaru_impreza.png',
     ('Honda',     'Accord'):        'car_honda_accord.png',
     # SUV / 4x4
     ('Toyota',    'RAV4'):          'car_rav4.png',
     ('Toyota',    'Fortuner'):      'car_fortuner.png',
-    ('Toyota',    'Land Cruiser'):  'car_landcruiser.png',
     ('Mitsubishi','Pajero'):        'car_fortuner.png',       # closest match
     ('Nissan',    'X-Trail'):       'car_rav4.png',           # closest match
     ('Subaru',    'Forester'):      'car_subaru.png',
