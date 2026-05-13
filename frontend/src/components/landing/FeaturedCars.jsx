@@ -7,6 +7,12 @@ import Button from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { Users, Fuel, Settings } from 'lucide-react';
 
+// Import local Kenyan car images
+import cx5Img from '../../assets/images/cx5_kenya.png';
+import atenzaImg from '../../assets/images/atenza_kenya.png';
+import premioImg from '../../assets/images/premio_kenya.png';
+import pradoImg from '../../assets/images/hero_kenya.png';
+
 const FeaturedCars = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cars', 'featured'],
@@ -25,10 +31,10 @@ const FeaturedCars = () => {
   const getKenyanImage = (car) => {
     const key = `${car.make.toLowerCase()} ${car.model.toLowerCase()}`;
     const mapping = {
-      'mazda cx-5': '/images/cx5_kenya.png',
-      'mazda atenza': '/images/atenza_kenya.png',
-      'toyota premio': '/images/premio_kenya.png',
-      'toyota land cruiser prado': '/images/hero_kenya.png'
+      'mazda cx-5': cx5Img,
+      'mazda atenza': atenzaImg,
+      'toyota premio': premioImg,
+      'toyota land cruiser prado': pradoImg
     };
     return mapping[key] || car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
   };

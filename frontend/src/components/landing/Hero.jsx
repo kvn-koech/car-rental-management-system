@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../ui/Button';
 import { ChevronRight, Shield, Clock, MapPin } from 'lucide-react';
+import heroImage from '../../assets/images/hero_kenya.png';
 
 const Hero = () => {
   return (
@@ -51,6 +52,7 @@ const Hero = () => {
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
         <img
           className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+          src={heroImage}
           alt="Premium SUV"
         />
       </div>
