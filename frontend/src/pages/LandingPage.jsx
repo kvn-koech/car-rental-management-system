@@ -28,7 +28,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section id="features" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {features.map((feature, index) => (
@@ -63,12 +63,16 @@ const LandingPage = () => {
             Sign up today and get 10% off your first rental.
           </p>
           <div className="mt-8 flex justify-center space-x-4">
-            <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition shadow-lg">
-              Get Started
-            </button>
-            <button className="bg-indigo-500 text-white border border-indigo-400 px-8 py-3 rounded-lg font-bold hover:bg-indigo-400 transition">
-              Learn More
-            </button>
+            <Link to="/signup">
+              <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition shadow-lg">
+                Get Started
+              </button>
+            </Link>
+            <a href="#features">
+              <button className="bg-indigo-500 text-white border border-indigo-400 px-8 py-3 rounded-lg font-bold hover:bg-indigo-400 transition">
+                Learn More
+              </button>
+            </a>
           </div>
         </div>
       </section>
