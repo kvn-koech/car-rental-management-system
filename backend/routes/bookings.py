@@ -13,6 +13,14 @@ VALID_STATUSES = {'pending', 'confirmed', 'completed', 'cancelled'}
 @jwt_required()
 def create_booking():
     user_id = get_jwt_identity()
+    if user_id == "admin":
+        return jsonify({"message": "Admins cannot book cars. Please use a customer account."}), 403
+
+    # Ensure user exists in DB
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
     data = request.get_json()
 
     car = Car.query.get_or_404(data['car_id'])
@@ -20,14 +28,26 @@ def create_booking():
     if car.status != 'available':
         return jsonify({"message": "This car is not currently available for booking"}), 409
 
+    # Robust date parsing
     try:
-        start_date = datetime.fromisoformat(data['start_date'].replace('Z', '+00:00'))
-        end_date = datetime.fromisoformat(data['end_date'].replace('Z', '+00:00'))
-    except (ValueError, KeyError):
-        return jsonify({"message": "Invalid date format. Use ISO 8601 (YYYY-MM-DD)"}), 400
+        s_raw = data.get('start_date', '')
+        e_raw = data.get('end_date', '')
+        
+        if 'T' in s_raw:
+            start_date = datetime.fromisoformat(s_raw.replace('Z', '+00:00'))
+        else:
+            start_date = datetime.strptime(s_raw, '%Y-%m-%d')
+            
+        if 'T' in e_raw:
+            end_date = datetime.fromisoformat(e_raw.replace('Z', '+00:00'))
+        else:
+            end_date = datetime.strptime(e_raw, '%Y-%m-%d')
+            
+    except (ValueError, KeyError, TypeError):
+        return jsonify({"message": "Invalid date format. Please use YYYY-MM-DD."}), 400
 
-    if end_date <= start_date:
-        return jsonify({"message": "End date must be after start date"}), 400
+    if end_date < start_date:
+        return jsonify({"message": "End date cannot be before start date"}), 400
 
     # Double-booking / overlap check
     overlap = Booking.query.filter(
