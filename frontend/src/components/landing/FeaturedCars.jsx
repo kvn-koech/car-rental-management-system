@@ -10,6 +10,11 @@ import { Users, Fuel, Settings } from 'lucide-react';
 const FeaturedCars = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['cars', 'featured'],
+    queryFn: async () => {
+      const res = await apiGet('/api/cars?per_page=4');
+      if (!res.ok) throw new Error('Failed to fetch cars');
+      return res.json();
+    },
   });
 
   if (isLoading) return <div className="py-20 text-center">Loading featured cars...</div>;
@@ -25,7 +30,7 @@ const FeaturedCars = () => {
           <p className="mt-4 text-xl text-gray-500">Choose from our most popular premium vehicles</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {cars.map((car) => (
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-48">
