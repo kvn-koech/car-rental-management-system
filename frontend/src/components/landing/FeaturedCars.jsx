@@ -23,11 +23,30 @@ const FeaturedCars = () => {
     },
   });
 
+  const getKenyanImage = (car) => {
+    if (!car) return '';
+    const make = car.make?.toLowerCase().trim() || '';
+    const model = car.model?.toLowerCase().trim() || '';
+    const fullKey = `${make} ${model}`;
+    
+    // Explicit matching for CX-5 variations
+    if (make === 'mazda' && (model.includes('cx-5') || model.includes('cx5'))) {
+      return cx5Img;
+    }
+    
+    const mapping = {
+      'mazda atenza': atenzaImg,
+      'toyota premio': premioImg,
+      'toyota land cruiser prado': pradoImg
+    };
+    
+    return mapping[fullKey] || car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
+  };
+
   if (isLoading) return <div className="py-20 text-center">Loading featured cars...</div>;
   if (error) return null;
 
   const cars = data?.cars || [];
-
 
   return (
     <section className="py-16 bg-gray-50">
