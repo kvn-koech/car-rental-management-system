@@ -22,6 +22,17 @@ const FeaturedCars = () => {
 
   const cars = data?.cars || [];
 
+  const getKenyanImage = (car) => {
+    const key = `${car.make.toLowerCase()} ${car.model.toLowerCase()}`;
+    const mapping = {
+      'mazda cx-5': '/images/cx5_kenya.png',
+      'mazda atenza': '/images/atenza_kenya.png',
+      'toyota premio': '/images/premio_kenya.png',
+      'toyota land cruiser prado': '/images/hero_kenya.png'
+    };
+    return mapping[key] || car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
+  };
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +46,7 @@ const FeaturedCars = () => {
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-48">
                 <img
-                  src={car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop'}
+                  src={getKenyanImage(car)}
                   alt={`${car.make} ${car.model}`}
                   className="w-full h-full object-cover"
                 />

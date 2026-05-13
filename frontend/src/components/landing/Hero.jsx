@@ -51,7 +51,6 @@ const Hero = () => {
       <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
         <img
           className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-          src="https://images.unsplash.com/photo-1594502184342-2e12f877aa73?q=80&w=1950&auto=format&fit=crop"
           alt="Premium SUV"
         />
       </div>
