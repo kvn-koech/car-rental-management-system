@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { apiPost } from '../api';
 
 const CustomerLogin = () => {
   const [formData, setFormData] = useState({
@@ -17,13 +18,7 @@ const CustomerLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await apiPost('/api/auth/login', formData);
 
       const data = await response.json();
 

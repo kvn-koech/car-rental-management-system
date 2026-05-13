@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { apiPost } from '../api';
 
 const CustomerSignup = () => {
   const [formData, setFormData] = useState({
@@ -49,17 +50,11 @@ const CustomerSignup = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.name, // Mapping 'name' to 'username' expected by backend
-          email: formData.email,
-          password: formData.password,
-          phone_number: formData.phoneNumber
-        }),
+      const response = await apiPost('/api/auth/register', {
+        username: formData.name, // Mapping 'name' to 'username' expected by backend
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phoneNumber
       });
 
       const data = await response.json();
