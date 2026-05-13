@@ -31,26 +31,6 @@ def save_uploaded_images(files):
     return image_urls
 
 
-@cars_bp.route('/', methods=['GET'])
-def get_cars():
-    location = request.args.get('location')
-    status = request.args.get('status')
-    min_price = request.args.get('min_price', type=float)
-    max_price = request.args.get('max_price', type=float)
-
-    query = Car.query
-
-    if location:
-        query = query.filter(Car.location.ilike(f'%{location}%'))
-    if status:
-        query = query.filter(Car.status == status)
-    if min_price is not None:
-        query = query.filter(Car.price_per_day >= min_price)
-    if max_price is not None:
-        query = query.filter(Car.price_per_day <= max_price)
-
-    cars = query.all()
-    return jsonify([car.to_dict() for car in cars]), 200
 
 
 @cars_bp.route('/', methods=['POST'])

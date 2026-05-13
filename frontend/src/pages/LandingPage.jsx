@@ -1,74 +1,78 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
+import Hero from '../components/landing/Hero';
+import FeaturedCars from '../components/landing/FeaturedCars';
+import { Shield, Clock, Zap, Star } from 'lucide-react';
+
+const Features = () => {
+  const features = [
+    {
+      title: 'Instant Booking',
+      description: 'Book your ride in minutes. No paperwork, just a seamless digital experience.',
+      icon: <Zap className="w-6 h-6 text-indigo-600" />,
+    },
+    {
+      title: 'Best Rates',
+      description: 'Competitive daily rental prices with no hidden fees or surprise charges.',
+      icon: <Clock className="w-6 h-6 text-indigo-600" />,
+    },
+    {
+      title: 'Fully Insured',
+      description: 'Drive with peace of mind knowing every trip is fully verified and insured.',
+      icon: <Shield className="w-6 h-6 text-indigo-600" />,
+    },
+    {
+      title: 'Premium Quality',
+      description: 'All our vehicles undergo rigorous inspections for your safety and comfort.',
+      icon: <Star className="w-6 h-6 text-indigo-600" />,
+    },
+  ];
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {features.map((feature, index) => (
+            <div key={index} className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6">
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+              <p className="text-gray-500">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const LandingPage = () => {
   return (
-    <>
-      {/* Hero Section */}
-      <div className="relative pt-32 pb-20 sm:pt-40 sm:pb-32 overflow-hidden">
-        {/* Background Gradients - Adjusted for Dark Mode */}
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100 via-transparent to-transparent dark:from-blue-900/20 dark:via-transparent dark:to-transparent opacity-70"></div>
-        <div className="absolute inset-y-0 left-0 -z-10 w-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white via-blue-50/50 to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <img src="/logo.png" alt="KPremium Rides Logo" className="mx-auto h-32 w-auto mb-6 drop-shadow-xl hover:scale-105 transition duration-500" />
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-secondary dark:text-white mb-8">
-            Karibu <br className="hidden md:block" />
-            <span className="text-primary dark:text-blue-400 transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-blue-400 dark:to-blue-600">KPremium Rides</span>
-          </h1>
-          <p className="mt-4 text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
-            From city cruisers to safari-ready 4x4s. Enjoy affordable rates, instant booking, and 24/7 support for your journey.
+    <div className="min-h-screen bg-white pt-16">
+      <Hero />
+      <Features />
+      <FeaturedCars />
+      
+      {/* CTA Section */}
+      <section className="bg-indigo-600 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+            Ready to start your journey?
+          </h2>
+          <p className="mt-4 text-xl text-indigo-100">
+            Sign up today and get 10% off your first rental.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/fleet" className="px-8 py-4 bg-primary dark:bg-blue-600 text-white text-lg font-semibold rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 shadow-lg hover:shadow-primary/30 dark:hover:shadow-blue-500/30 transition transform hover:-translate-y-1 block text-center">
-              Browse Fleet
-            </Link>
-            <button className="px-8 py-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur text-secondary dark:text-white text-lg font-semibold rounded-full border border-gray-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600 transition">
-              How it Works
+          <div className="mt-8 flex justify-center space-x-4">
+            <button className="bg-white text-indigo-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition shadow-lg">
+              Get Started
+            </button>
+            <button className="bg-indigo-500 text-white border border-indigo-400 px-8 py-3 rounded-lg font-bold hover:bg-indigo-400 transition">
+              Learn More
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Features Grid */}
-      <div className="py-24 bg-white/30 dark:bg-slate-900/30 backdrop-blur-sm border-t border-b border-white/50 dark:border-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Card 1 */}
-            <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md p-8 rounded-2xl shadow-sm border border-white/60 dark:border-slate-700/50 hover:shadow-lg hover:-translate-y-1 transition duration-300 group">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 text-primary dark:text-blue-400 group-hover:scale-110 transition">
-                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-secondary dark:text-white">Instant Booking</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">Book your ride in minutes. No paperwork, just a seamless digital experience crafted for your convenience.</p>
-            </div>
-
-            {/* Card 2 */}
-            <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md p-8 rounded-2xl shadow-sm border border-white/60 dark:border-slate-700/50 hover:shadow-lg hover:-translate-y-1 transition duration-300 group">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 text-primary dark:text-blue-400 group-hover:scale-110 transition">
-                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-secondary dark:text-white">Best Rates Guaranteed</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">Competitive daily rental prices with no hidden fees or surprise charges. What you see is what you pay.</p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-md p-8 rounded-2xl shadow-sm border border-white/60 dark:border-slate-700/50 hover:shadow-lg hover:-translate-y-1 transition duration-300 group">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 text-primary dark:text-blue-400 group-hover:scale-110 transition">
-                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-secondary dark:text-white">Premium Insurance</h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">Drive with peace of mind knowing every trip is fully verified and insured. Safety is our priority.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 };
 
