@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 import Hero from '../components/landing/Hero';
 import FeaturedCars from '../components/landing/FeaturedCars';
