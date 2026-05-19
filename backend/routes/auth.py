@@ -58,7 +58,7 @@ def login():
         # Inject is_admin claim so JWT-protected routes work uniformly
         additional_claims = {"is_admin": user.is_admin}
         access_token = create_access_token(
-            identity=user.id,
+            identity=str(user.id),
             additional_claims=additional_claims
         )
         return jsonify({

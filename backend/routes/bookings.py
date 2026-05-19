@@ -16,7 +16,7 @@ def create_booking():
     if user_id == "admin":
         return jsonify({"message": "Admins cannot book cars. Please use a customer account."}), 403
 
-    user = User.query.get(user_id)
+    user = User.query.get(int(user_id))
     if not user:
         return jsonify({"message": "User session invalid"}), 401
 
@@ -61,7 +61,7 @@ def create_booking():
     mpesa_code = f"MPS{random.randint(1000000000, 9999999999)}"
 
     booking = Booking(
-        user_id=user_id,
+        user_id=int(user_id),
         car_id=car.id,
         start_date=start_date,
         end_date=end_date,
