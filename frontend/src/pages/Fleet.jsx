@@ -4,10 +4,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { apiGet, apiPost } from '../api';
 import Button from '../components/ui/Button';
-import Input from '../components/ui/Input';
 import Card, { CardContent, CardFooter } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
-import { Search, Filter, Users, Fuel, Settings, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Users, Fuel, Settings, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const today = new Date().toISOString().split('T')[0];
 
 const Fleet = () => {
   const navigate = useNavigate();
@@ -49,7 +50,9 @@ const Fleet = () => {
       if (res.ok) {
         toast.success(`Booking request sent! M-Pesa Code: ${result.mpesa_code}`);
         setBookingCar(null);
+        setBookingData({ startDate: '', endDate: '', mpesaPhone: '' });
         queryClient.invalidateQueries(['bookings']);
+        queryClient.invalidateQueries(['cars']);
         navigate('/dashboard');
       } else {
         toast.error(result.message || 'Booking failed');
@@ -83,13 +86,12 @@ const Fleet = () => {
             <h1 className="text-4xl font-extrabold text-gray-900">Our Fleet</h1>
             <p className="mt-2 text-gray-500">Premium vehicles for your every need</p>
           </div>
-          
           <div className="mt-4 md:mt-0 flex space-x-2">
-            <Input 
-              placeholder="Filter by location..." 
+            <input
+              placeholder="Filter by location..."
               value={filters.location}
               onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
-              className="w-64"
+              className="w-64 px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -117,26 +119,25 @@ const Fleet = () => {
                   </h3>
                   <span className="text-sm font-medium text-gray-500">{car.year}</span>
                 </div>
-                
                 <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-600 mb-4">
                   <div className="flex items-center"><Users className="w-4 h-4 mr-2 text-indigo-500" /> {car.seats} Seats</div>
                   <div className="flex items-center"><Fuel className="w-4 h-4 mr-2 text-indigo-500" /> {car.fuel_type}</div>
                   <div className="flex items-center"><Settings className="w-4 h-4 mr-2 text-indigo-500" /> {car.transmission}</div>
                   <div className="flex items-center"><Calendar className="w-4 h-4 mr-2 text-indigo-500" /> {car.year}</div>
                 </div>
-
                 <p className="text-sm text-gray-500 line-clamp-2 mb-4">{car.description}</p>
               </CardContent>
               <CardFooter className="flex items-center justify-between bg-gray-50/50">
                 <div className="text-xl font-bold text-indigo-600">
                   KES {car.price_per_day.toLocaleString()}<span className="text-sm text-gray-500 font-normal">/day</span>
                 </div>
-                <Button 
-                  disabled={car.status !== 'available'}
-                  onClick={() => setBookingCar(car)}
-                >
-                  Book Now
-                </Button>
+                {car.status === 'available' ? (
+                  <Button onClick={() => setBookingCar(car)}>Book Now</Button>
+                ) : (
+                  <span className="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed">
+                    {car.status === 'rented' ? 'Booked' : 'Unavailable'}
+                  </span>
+                )}
               </CardFooter>
             </Card>
           ))}
@@ -145,21 +146,11 @@ const Fleet = () => {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-12 flex justify-center items-center space-x-4">
-            <Button 
-              variant="secondary" 
-              disabled={page === 1}
-              onClick={() => setPage(p => p - 1)}
-            >
+            <Button variant="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
               <ChevronLeft className="w-5 h-5 mr-1" /> Previous
             </Button>
-            <span className="text-gray-600 font-medium">
-              Page {page} of {totalPages}
-            </span>
-            <Button 
-              variant="secondary" 
-              disabled={page === totalPages}
-              onClick={() => setPage(p => p + 1)}
-            >
+            <span className="text-gray-600 font-medium">Page {page} of {totalPages}</span>
+            <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
               Next <ChevronRight className="w-5 h-5 ml-1" />
             </Button>
           </div>
@@ -176,43 +167,46 @@ const Fleet = () => {
 
               <form onSubmit={handleBookSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Input 
-                    label="Start Date" 
-                    type="date" 
-                    required 
-                    value={bookingData.startDate}
-                    onChange={(e) => setBookingData(prev => ({ ...prev, startDate: e.target.value }))}
-                  />
-                  <Input 
-                    label="End Date" 
-                    type="date" 
-                    required 
-                    value={bookingData.endDate}
-                    onChange={(e) => setBookingData(prev => ({ ...prev, endDate: e.target.value }))}
+                  <div className="flex flex-col space-y-1.5">
+                    <label className="text-sm font-semibold text-gray-700">Start Date</label>
+                    <input
+                      type="date"
+                      required
+                      min={today}
+                      value={bookingData.startDate}
+                      onChange={(e) => setBookingData(prev => ({ ...prev, startDate: e.target.value, endDate: '' }))}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <label className="text-sm font-semibold text-gray-700">End Date</label>
+                    <input
+                      type="date"
+                      required
+                      min={bookingData.startDate || today}
+                      value={bookingData.endDate}
+                      onChange={(e) => setBookingData(prev => ({ ...prev, endDate: e.target.value }))}
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <label className="text-sm font-semibold text-gray-700">M-Pesa Phone Number</label>
+                  <input
+                    type="text"
+                    placeholder="254..."
+                    required
+                    value={bookingData.mpesaPhone}
+                    onChange={(e) => setBookingData(prev => ({ ...prev, mpesaPhone: e.target.value }))}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
-                <Input 
-                  label="M-Pesa Phone Number" 
-                  placeholder="254..." 
-                  required 
-                  value={bookingData.mpesaPhone}
-                  onChange={(e) => setBookingData(prev => ({ ...prev, mpesaPhone: e.target.value }))}
-                />
-                
+
                 <div className="pt-4 flex space-x-3">
-                  <Button 
-                    type="button" 
-                    variant="secondary" 
-                    className="flex-1"
-                    onClick={() => setBookingCar(null)}
-                  >
+                  <Button type="button" variant="secondary" className="flex-1" onClick={() => setBookingCar(null)}>
                     Cancel
                   </Button>
-                  <Button 
-                    type="submit" 
-                    className="flex-1"
-                    disabled={bookingMutation.isPending}
-                  >
+                  <Button type="submit" className="flex-1" disabled={bookingMutation.isPending}>
                     {bookingMutation.isPending ? 'Processing...' : 'Confirm'}
                   </Button>
                 </div>
