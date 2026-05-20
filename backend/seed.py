@@ -134,7 +134,7 @@ MODEL_IMAGES = {
     ('Audi',      'A4'):            'car_mercedes.png',       # closest match
     # Van
     ('Toyota',    'Hiace'):         'car_hiace.png',
-    ('Toyota',    'Noah'):          'car_hiace.png',
+    ('Toyota',    'Noah'):          'car_noah.png',
     ('Nissan',    'Serena'):        'car_hiace.png',          # closest match
     # Green
     ('Toyota',    'Prius'):         'car_prius.png',

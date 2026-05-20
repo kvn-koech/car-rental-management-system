@@ -17,9 +17,8 @@ from models import db, Car
 app = create_app()
 with app.app_context():
     base = os.environ.get('BACKEND_URL', 'https://car-rental-backend-ibnc.onrender.com').rstrip('/')
-    Car.query.filter_by(model='Pajero').update({'image_url': f'{base}/static/uploads/car_pajero.png'})
-    Car.query.filter_by(model='Defender').update({'image_url': f'{base}/static/uploads/car_defender.png'})
-    Car.query.filter_by(model='3 Series').update({'image_url': f'{base}/static/uploads/car_bmw_3series.png'})
+    Car.query.filter_by(model='Noah').update({'image_url': f'{base}/static/uploads/car_noah.png'})
+    Car.query.filter_by(model='Prius').update({'image_url': f'{base}/static/uploads/car_prius.png'})
     db.session.commit()
     print('Fixed image URLs successfully!')
 "
