@@ -138,7 +138,7 @@ MODEL_IMAGES = {
     ('Nissan',    'Serena'):        'car_hiace.png',          # closest match
     # Green
     ('Toyota',    'Prius'):         'car_prius.png',
-    ('Nissan',    'Leaf'):          'car_prius.png',          # closest match
+    ('Nissan',    'Leaf'):          'car_leaf.png',
 }
 
 FALLBACK_IMAGE = '/static/uploads/car_premio.png'

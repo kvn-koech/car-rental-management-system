@@ -19,6 +19,7 @@ with app.app_context():
     base = os.environ.get('BACKEND_URL', 'https://car-rental-backend-ibnc.onrender.com').rstrip('/')
     Car.query.filter_by(model='Noah').update({'image_url': f'{base}/static/uploads/car_noah.png'})
     Car.query.filter_by(model='Prius').update({'image_url': f'{base}/static/uploads/car_prius.png'})
+    Car.query.filter_by(model='Leaf').update({'image_url': f'{base}/static/uploads/car_leaf.png'})
     db.session.commit()
     print('Fixed image URLs successfully!')
 "
