@@ -102,7 +102,7 @@ const Fleet = () => {
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-56">
                 <img
-                  src={car.image_url ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${car.image_url}` : 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'}
+                  src={car.image_url || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'}
                   alt={`${car.make} ${car.model}`}
                   className="w-full h-full object-cover"
                 />

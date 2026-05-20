@@ -101,7 +101,7 @@ DESCRIPTIONS = {
 
 # Static image URLs — served by Flask from static/uploads/
 # On Render, set BACKEND_URL env var (e.g. https://car-rental-backend-ibnc.onrender.com)
-_backend_url = os.environ.get('BACKEND_URL', 'http://localhost:5000').rstrip('/')
+
 BASE_STATIC = '/static/uploads'
 
 # Full 1-to-1 per-model image mapping
