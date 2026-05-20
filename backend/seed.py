@@ -124,13 +124,13 @@ MODEL_IMAGES = {
     # SUV / 4x4
     ('Toyota',    'RAV4'):          'car_rav4.png',
     ('Toyota',    'Fortuner'):      'car_fortuner.png',
-    ('Mitsubishi','Pajero'):        'car_fortuner.png',       # closest match
+    ('Mitsubishi','Pajero'):        'car_pajero.png',       # closest match
     ('Nissan',    'X-Trail'):       'car_rav4.png',           # closest match
     ('Subaru',    'Forester'):      'car_subaru.png',
-    ('Land Rover','Defender'):      'car_landcruiser.png',    # closest match
+    ('Land Rover','Defender'):      'car_defender.png',    # closest match
     # Premium
     ('Mercedes',  'C-Class'):       'car_mercedes.png',
-    ('BMW',       '3 Series'):      'car_mercedes.png',       # closest match
+    ('BMW',       '3 Series'):      'car_bmw_3series.png',       # closest match
     ('Audi',      'A4'):            'car_mercedes.png',       # closest match
     # Van
     ('Toyota',    'Hiace'):         'car_hiace.png',
