@@ -102,7 +102,7 @@ DESCRIPTIONS = {
 # Static image URLs — served by Flask from static/uploads/
 # On Render, set BACKEND_URL env var (e.g. https://car-rental-backend-ibnc.onrender.com)
 _backend_url = os.environ.get('BACKEND_URL', 'http://localhost:5000').rstrip('/')
-BASE_STATIC = f'{_backend_url}/static/uploads'
+BASE_STATIC = '/static/uploads'
 
 # Full 1-to-1 per-model image mapping
 MODEL_IMAGES = {
@@ -141,7 +141,7 @@ MODEL_IMAGES = {
     ('Nissan',    'Leaf'):          'car_prius.png',          # closest match
 }
 
-FALLBACK_IMAGE = f'{BASE_STATIC}/car_premio.png'
+FALLBACK_IMAGE = '/static/uploads/car_premio.png'
 
 
 def get_image_url(make, model):
