@@ -37,12 +37,9 @@ def create_app(config_class=Config):
     
     # Configure CORS
     frontend_url = app.config.get('FRONTEND_URL', 'http://localhost:5173').rstrip('/')
-    origins = [
-        frontend_url, 
-        f"{frontend_url}/",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ]
+    origins = [frontend_url, f"{frontend_url}/"]
+    if not app.config.get('IS_RENDER'):
+        origins.extend(["http://localhost:5173", "http://127.0.0.1:5173"])
     CORS(app, origins=list(set(origins)), supports_credentials=True)
     
     JWTManager(app)

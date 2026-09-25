@@ -6,6 +6,7 @@ services:
     plan: free
     buildCommand: "cd backend && ./render_build.sh"
     startCommand: "cd backend && bash render_start.sh"
+    healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -16,11 +17,12 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: FRONTEND_URL
-        value: "https://car-rental-frontend-qvjc.onrender.com"
-      - key: BACKEND_URL
-        value: "https://car-rental-backend-ibnc.onrender.com"
+        fromService:
+          name: car-rental-frontend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
       - key: ADMIN_SECRET_KEY
-        value: "KpRemiumRides@Admin2024"
+        generateValue: true
 
   # Frontend Static Site
   - type: web
@@ -30,7 +32,10 @@ services:
     staticPublishPath: "./frontend/dist"
     envVars:
       - key: VITE_API_URL
-        value: "https://car-rental-backend-ibnc.onrender.com"
+        fromService:
+          name: car-rental-backend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
     routes:
       - type: rewrite
         source: /*

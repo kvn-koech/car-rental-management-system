@@ -1,5 +1,4 @@
-from flask import Blueprint, request, jsonify
-import os
+from flask import Blueprint, request, jsonify, current_app
 import re
 from models import db, User
 from flask_jwt_extended import create_access_token
@@ -78,11 +77,9 @@ def admin_login():
     data = request.get_json()
     secret_key = data.get('secret_key')
 
-    # WARNING: Set ADMIN_SECRET_KEY environment variable in production.
-    # Never rely on this default in a deployed environment.
-    ADMIN_SECRET_KEY = os.environ.get('ADMIN_SECRET_KEY', 'MY_SECRET_ADMIN_KEY')
+    ADMIN_SECRET_KEY = current_app.config.get('ADMIN_SECRET_KEY')
 
-    if secret_key == ADMIN_SECRET_KEY:
+    if ADMIN_SECRET_KEY and secret_key == ADMIN_SECRET_KEY:
         access_token = create_access_token(
             identity="admin",
             additional_claims={"is_admin": True}
