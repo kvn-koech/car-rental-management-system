@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '../../api';
+import { apiGet, resolveImageUrl } from '../../api';
 import Card, { CardContent, CardFooter } from '../ui/Card';
 import Badge from '../ui/Badge';
 import Button from '../ui/Button';
@@ -34,7 +34,7 @@ const FeaturedCars = () => {
       'toyota land cruiser prado': pradoImg
     };
     
-    return mapping[fullKey] || car.image_url || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
+    return mapping[fullKey] || resolveImageUrl(car.image_url) || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=800&auto=format&fit=crop';
   };
 
   if (isLoading) return <div className="py-20 text-center">Loading featured cars...</div>;
