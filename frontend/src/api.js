@@ -5,6 +5,12 @@
 
 const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+export function resolveImageUrl(imageUrl) {
+  if (!imageUrl) return '';
+  if (/^https?:\/\//i.test(imageUrl)) return imageUrl;
+  return `${BASE}${imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`}`;
+}
+
 function getAuthHeaders(isFormData = false) {
   const token =
     localStorage.getItem('admin_token') || localStorage.getItem('token');
