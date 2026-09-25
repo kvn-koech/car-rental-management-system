@@ -5,7 +5,7 @@ services:
     env: python
     plan: free
     buildCommand: "cd backend && ./render_build.sh"
-    startCommand: "cd backend && gunicorn 'app:create_app()'"
+    startCommand: "cd backend && bash render_start.sh"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
