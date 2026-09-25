@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { apiGet, apiPatch, apiDelete, apiFormPost, apiFormPatch } from '../api';
+import { apiGet, apiPatch, apiDelete, apiFormPost, apiFormPatch, resolveImageUrl } from '../api';
 import Button from '../components/ui/Button';
 import Card, { CardHeader, CardContent } from '../components/ui/Card';
 import OverviewStats from '../components/admin/OverviewStats';
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
                 {cars.map(car => (
                   <Card key={car.id} className="overflow-hidden">
                     <div className="h-40 relative">
-                      <img src={car.image_url} alt={car.model} className="w-full h-full object-cover" />
+                      <img src={resolveImageUrl(car.image_url)} alt={car.model} className="w-full h-full object-cover" />
                       <div className="absolute top-2 right-2">
                         <Badge variant={car.status === 'available' ? 'success' : 'warning'}>{car.status}</Badge>
                       </div>
