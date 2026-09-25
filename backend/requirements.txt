@@ -7,7 +7,7 @@ flask-jwt-extended
 faker
 werkzeug
 gunicorn
-psycopg2-binary
+psycopg[binary]
 flask-limiter
 pytest
 pytest-flask
