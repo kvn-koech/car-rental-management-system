@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { apiGet, apiPost } from '../api';
+import { apiGet, apiPost, resolveImageUrl } from '../api';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardFooter } from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
@@ -55,7 +55,14 @@ const Fleet = () => {
         queryClient.invalidateQueries(['cars']);
         navigate('/dashboard');
       } else {
-        toast.error(result.message || 'Booking failed');
+        const message = result.message || result.msg || 'Booking failed';
+        if (res.status === 401) {
+          localStorage.removeItem('token');
+          toast.error('Please log in with a customer account to book a car.');
+          navigate('/login');
+          return;
+        }
+        toast.error(message);
       }
     },
     onError: () => toast.error('An error occurred during booking'),
@@ -63,6 +70,11 @@ const Fleet = () => {
 
   const handleBookSubmit = (e) => {
     e.preventDefault();
+    if (!localStorage.getItem('token')) {
+      toast.error('Please log in with a customer account to book a car.');
+      navigate('/login');
+      return;
+    }
     bookingMutation.mutate({
       car_id: bookingCar.id,
       start_date: bookingData.startDate,
@@ -102,7 +114,7 @@ const Fleet = () => {
             <Card key={car.id} hoverEffect className="flex flex-col">
               <div className="relative h-56">
                 <img
-                  src={car.image_url || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'}
+                  src={resolveImageUrl(car.image_url) || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'}
                   alt={`${car.make} ${car.model}`}
                   className="w-full h-full object-cover"
                 />
