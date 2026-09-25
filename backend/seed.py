@@ -149,6 +149,33 @@ def get_image_url(make, model):
     return f'{BASE_STATIC}/{fname}' if fname else FALLBACK_IMAGE
 
 
+def seed_fleet_if_empty(app=None):
+    app = app or create_app()
+    with app.app_context():
+        if Car.query.first() is not None:
+            print("Fleet already has cars; skipping initial fleet seed.")
+            return
+
+        for make, model, category, seats, transmission, fuel_type, base_price in CAR_CATALOGUE:
+            car = Car(
+                make=make,
+                model=model,
+                year=2024,
+                price_per_day=base_price,
+                location='Nairobi',
+                status='available',
+                seats=seats,
+                transmission=transmission,
+                fuel_type=fuel_type,
+                description=DESCRIPTIONS[category][0],
+                image_url=get_image_url(make, model),
+            )
+            db.session.add(car)
+
+        db.session.commit()
+        print(f"Seeded {len(CAR_CATALOGUE)} fleet cars.")
+
+
 def phone_ke():
     """Generate a realistic Kenyan phone number."""
     prefixes = ['0701', '0702', '0710', '0711', '0712', '0720', '0721',
